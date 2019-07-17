@@ -1,0 +1,21 @@
+.table-view:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+.table-view .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+.table-view .cell#durationTableColumn  {
+    -fx-alignment: CENTER-RIGHT;
+}
+
+
+.table-view-row-playing {
+    -fx-background-color: red;
+}
+

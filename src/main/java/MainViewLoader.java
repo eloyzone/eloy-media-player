@@ -10,7 +10,6 @@ public class MainViewLoader extends Application
     public void start(Stage primaryStage) throws Exception
     {
         Parent root = FXMLLoader.load(getClass().getResource("/view/MainView.fxml"));
-
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

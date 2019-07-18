@@ -82,14 +82,19 @@ public class MediaPlayerController implements Runnable
     @FXML
     void rewindButtonAction(ActionEvent event)
     {
+        playPreviousMusicFromPlayList();
     }
 
     @FXML
     void stopButtonAction(ActionEvent event)
     {
-
+        if (mediaPlayer != null)
+        {
+            mediaPlayer.stop();
+            playPauseButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/icon/icon-play.png"), 40.0, 40.0, false, false)));
+            mediaPlayerSlider.setValue(0);
+        }
     }
-
 
     @FXML
     void initialize()
@@ -212,6 +217,56 @@ public class MediaPlayerController implements Runnable
         } else
         {
             playPauseButton.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/images/icon/icon-play.png"), 40.0, 40.0, false, false)));
+        }
+
+        mediaPlayer.setOnEndOfMedia(() ->
+        {
+//            mediaPlayerSlider.setPlaying(false);
+            playNextMusicFromPlayList();
+        });
+    }
+
+
+    private void playPreviousMusicFromPlayList()
+    {
+        if (musicListIterator.hasPrevious())
+        {
+            if (mediaPlayer != null && mediaPlayer.getStatus().equals(MediaPlayer.Status.PLAYING))
+            {
+                mediaPlayer.stop();
+                mediaPlayer.dispose();
+            }
+
+            if (hasBeenRewound == false)
+            {
+                musicListIterator.previous();
+                hasBeenRewound = true;
+            }
+
+            MusicMP3File musicMP3File = (MusicMP3File) musicListIterator.previous();
+            media = new Media(musicMP3File.getFile().toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+
+
+            mediaPlayer.errorProperty().addListener(event ->
+            {
+                // todo: an error occurred: probably MediaException.Type MEDIA_UNSUPPORTED
+                mediaPlayer.stop();
+                mediaPlayer.dispose();
+                playPreviousMusicFromPlayList();
+            });
+            mediaPlayer.play();
+            start(mediaPlayer, musicMP3File.getDuration().getSeconds());
+
+            if (currentPlayingMusicMP3File != null)
+            {
+                currentPlayingMusicMP3File.getMusicMP3FileTableRow().getStyleClass().remove("table-view-row-playing");
+            }
+            currentPlayingMusicMP3File = musicMP3File;
+            currentPlayingMusicMP3File.getMusicMP3FileTableRow().getStyleClass().add("table-view-row-playing");
+
+
+//            musicsListNotPlayed.remove(0);
         }
 
         mediaPlayer.setOnEndOfMedia(() ->

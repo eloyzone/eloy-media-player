@@ -7,18 +7,19 @@ import java.util.*;
 import com.github.eloymediaplayer.model.MusicMP3File;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MainView
 {
+    private double xOffset;
+    private double yOffset;
     protected ObservableList<MusicMP3File> musicMP3FileObservableList = FXCollections.observableArrayList();
 
     @FXML
@@ -32,6 +33,9 @@ public class MainView
 
     @FXML
     private BorderPane borderPane;
+
+    @FXML
+    private MenuBar menuBar;
 
     @FXML
     private MenuItem openMenuItem;
@@ -52,6 +56,8 @@ public class MainView
 
         nameTableColumn.setCellValueFactory(new PropertyValueFactory<MusicMP3File, String>("musicName"));
         durationTableColumn.setCellValueFactory(new PropertyValueFactory<MusicMP3File, String>("musicDuration"));
+        playlistTableView.setPlaceholder(new Label("An empty playlist"));
+
 
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter fileChooserExtensionFilter = new FileChooser.ExtensionFilter("music files", "*.mp3");
@@ -60,6 +66,8 @@ public class MainView
 
         openMenuItem.setOnAction(event ->
         {
+            // todo: recreate a new playlist
+            // todo: Exception in thread "JavaFX Application Thread" java.lang.NullPointerException
             Stage stage = (Stage) borderPane.getScene().getWindow();
 
             int num = 0;
@@ -69,8 +77,6 @@ public class MainView
                 MusicMP3File musicMP3File = new MusicMP3File(file);
                 musicMP3FileObservableList.add(musicMP3File);
                 num++;
-                System.out.println(num);
-
             }
 //            Collections.shuffle(musicsListNotPlayed);
 
@@ -106,5 +112,32 @@ public class MainView
         });
 
 
+        draggableUndecoratedStage();
+
+    }
+
+    private void draggableUndecoratedStage()
+    {
+        menuBar.setOnMousePressed(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                Stage stage = (Stage) menuBar.getScene().getWindow();
+                xOffset = stage.getX() - event.getScreenX();
+                yOffset = stage.getY() - event.getScreenY();
+            }
+        });
+
+        menuBar.setOnMouseDragged(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                Stage stage = (Stage) menuBar.getScene().getWindow();
+                stage.setX(event.getScreenX() + xOffset);
+                stage.setY(event.getScreenY() + yOffset);
+            }
+        });
     }
 }

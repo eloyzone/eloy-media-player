@@ -1,8 +1,18 @@
+
+{
+    -fx-custom-color-menu-red: #a30000;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 0 1;
+    -fx-border-color: -fx-custom-color-menu-red;
+}
+
 .table-view:focused {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
-
 
 .table-view .column-header-background {
     -fx-max-height: 0;
@@ -10,12 +20,39 @@
     -fx-min-height: 0;
 }
 
-.table-view .cell#durationTableColumn  {
+.table-view .cell#durationTableColumn {
     -fx-alignment: CENTER-RIGHT;
 }
 
-
 .table-view-row-playing {
     -fx-background-color: red;
+}
+
+.root, .menu-bar {
+    -fx-background-color: black;
+}
+
+.menu .label {
+    -fx-text-fill: white;
+}
+
+.menu:focused, .menu:hover {
+    -fx-background-color: -fx-custom-color-menu-red;
+}
+
+/*---------------- Applying style for menu when menu-item is showing ----------------------------------------------*/
+
+.menu:showing, .menu:visited {
+    -fx-background-color: -fx-custom-color-menu-red;
+}
+
+/*----------------------------------------------------------------------------------------------------------------*/
+
+.menu-item .label {
+    -fx-text-fill: black;
+}
+
+.menu-item:hover, .menu-item:focused {
+    -fx-background-color: -fx-custom-color-menu-red;
 }
 
